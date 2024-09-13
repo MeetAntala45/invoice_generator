@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'login.dart';
-
+import 'welcomepage.dart';
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Invoice Generator',
@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => WelcomePage()),
       );
     });
   }
