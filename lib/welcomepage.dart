@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'login.dart'; // Import the SignIn screen
+import 'signup.dart'; // Import the SignUp screen
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -9,7 +11,7 @@ class WelcomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 20), 
+          SizedBox(height: 20),
           Container(
             height: 200,
             child: Image.asset('assets/logo.png'),
@@ -35,6 +37,11 @@ class WelcomePage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    // Navigate to the SignUp screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignupScreen()),
+                    );
                   },
                   child: Text('Sign Up'),
                   style: ElevatedButton.styleFrom(
@@ -46,6 +53,11 @@ class WelcomePage extends StatelessWidget {
                 ),
                 OutlinedButton(
                   onPressed: () {
+                    // Navigate to the SignIn screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
                   },
                   child: Text('Sign In'),
                   style: OutlinedButton.styleFrom(

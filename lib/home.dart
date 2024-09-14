@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
             case 'profile':
               return ProfilePage();
             case 'login':
-              return LoginPage();
+              // return LoginPage();
             default:
               return HomePage();
           }
@@ -90,16 +90,16 @@ class _HomePageState extends State<HomePage> {
               title: Text('Profile'),
               onTap: () => _navigateTo('profile'),
             ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-              },
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.logout),
+            //   title: Text('Logout'),
+            //   onTap: () {
+            //     Navigator.pushReplacement(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => LoginPage()),
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
