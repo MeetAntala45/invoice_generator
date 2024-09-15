@@ -31,29 +31,57 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(
+        title: Text('Login'),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(hintText: 'Enter your email'),
+                decoration: InputDecoration(
+                  hintText: 'Enter your email',
+                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
+                  filled: true,
+                  fillColor: Theme.of(context).cardColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).hintColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                  ),
+                ),
                 keyboardType: TextInputType.emailAddress,
+                style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Email cannot be empty';
                   }
-                  // Add more validations as needed
                   return null;
                 },
               ),
+              SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(hintText: 'Enter your password'),
+                decoration: InputDecoration(
+                  hintText: 'Enter your password',
+                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
+                  filled: true,
+                  fillColor: Theme.of(context).cardColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).hintColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                  ),
+                ),
                 obscureText: true,
+                style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Password cannot be empty';
@@ -61,10 +89,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 30),
               ElevatedButton(
                 onPressed: _login,
-                child: Text('Login'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text('Login', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),

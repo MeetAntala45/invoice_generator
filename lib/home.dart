@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'new_invoice.dart';
-import 'invoices.dart';
-import 'profile.dart';
-import 'login.dart';
+import 'invoice.dart';
+import 'view_invoice.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,51 +8,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, String>> recentTransactions = [];
+  // Create a GlobalKey for the Scaffold
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _addInvoice(Map<String, String> invoice) {
+  List<Map<String, dynamic>> recentTransactions = [];
+
+  void _addInvoice(Map<String, dynamic> invoice) {
     setState(() {
       recentTransactions.add(invoice);
     });
   }
 
-  void _navigateTo(String route) {
-    Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          switch (route) {
-            case 'invoices':
-              return InvoicesPage(invoices: recentTransactions);
-            case 'profile':
-              return ProfilePage();
-            case 'login':
-              // return LoginPage();
-            default:
-              return HomePage();
-          }
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFEFF3F6),
+      key: _scaffoldKey, // Assign the key to the Scaffold
       appBar: AppBar(
-        title: Text('Invoice Generator'),
-        backgroundColor: Colors.blueGrey[200],
-        elevation: 0,
+        title: Text('Shop Name'),
+        backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            // Open the drawer using the scaffoldKey
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
-              );
+              // Profile navigation logic here
             },
           ),
         ],
@@ -65,45 +48,46 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Theme.of(context).primaryColor,
               ),
               child: Text(
                 'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+                style: Theme.of(context).textTheme.displayLarge,
               ),
-            ),
-            ListTile(
-              leading: Icon(Icons.dashboard),
-              title: Text('Dashboard'),
-              onTap: () => _navigateTo('dashboard'),
-            ),
-            ListTile(
-              leading: Icon(Icons.receipt_long),
-              title: Text('View Invoices'),
-              onTap: () => _navigateTo('invoices'),
             ),
             ListTile(
               leading: Icon(Icons.person),
               title: Text('Profile'),
-              onTap: () => _navigateTo('profile'),
+              onTap: () {
+                // Navigate to profile
+              },
             ),
-            // ListTile(
-            //   leading: Icon(Icons.logout),
-            //   title: Text('Logout'),
-            //   onTap: () {
-            //     Navigator.pushReplacement(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => LoginPage()),
-            //     );
-            //   },
-            // ),
+            ListTile(
+              leading: Icon(Icons.help),
+              title: Text('Help'),
+              onTap: () {
+                // Navigate to help
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.receipt_long),
+              title: Text('Invoices'),
+              onTap: () {
+                // Navigate to invoices
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: () {
+                // Logout logic
+              },
+            ),
           ],
         ),
       ),
-      body: Padding(
+      
+        body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,13 +121,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Text(
-                      'New Invoice',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    Text('New Invoice', style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
               ),
@@ -157,53 +135,65 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRecentTransactions() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      width: double.infinity, 
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Recent Invoices',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Recent Invoices',
+              style: Theme.of(context).textTheme.displayLarge,
             ),
-          ),
-          SizedBox(height: 16),
-          ...recentTransactions.map((invoice) => _buildTransactionItem(
-                invoice['name']!,
-                invoice['date']!,
-                invoice['invoice']!,
-                invoice['amount']!,
-              )),
-        ],
+            SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: recentTransactions.length,
+                itemBuilder: (context, index) {
+                  return _buildTransactionItem(recentTransactions[index]);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildTransactionItem(
-      String name, String date, String invoice, String amount) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.blue.withOpacity(0.1),
-        child: Icon(
-          Icons.insert_drive_file,
-          color: Colors.blue,
+  Widget _buildTransactionItem(Map<String, dynamic> invoice) {
+    return Card(
+      color: Theme.of(context).cardColor,
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        title: Text(invoice['clientName'], style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Text(
+          invoice['date'],
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white70),
         ),
-      ),
-      title: Text(name),
-      subtitle: Text('$date • $invoice'),
-      trailing: Text(
-        amount,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              invoice['status'] == 'paid' ? 'Paid' : 'Unpaid',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: invoice['status'] == 'paid' ? Colors.green : Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewInvoicePage(invoice: invoice),
+            ),
+          );
+        },
       ),
     );
   }

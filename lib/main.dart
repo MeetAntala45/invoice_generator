@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'welcomepage.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'home.dart';
+import 'theme.dart';
 const firebaseOptions = FirebaseOptions(
   apiKey: "AIzaSyDGymh5G8ZJAfaH2M8gjfBZIYlpUyUvRm0",
   authDomain: "invoice-6d5b4.firebaseapp.com",
@@ -26,6 +27,7 @@ void main() async {
   }
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
+    theme: appTheme,
     title: 'Invoice Generator',
     home: SplashScreen(),
   ));
