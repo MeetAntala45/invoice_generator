@@ -59,28 +59,24 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.person),
               title: Text('Profile'),
               onTap: () {
-                // Navigate to profile
               },
             ),
             ListTile(
               leading: Icon(Icons.help),
               title: Text('Help'),
               onTap: () {
-                // Navigate to help
               },
             ),
             ListTile(
               leading: Icon(Icons.receipt_long),
               title: Text('Invoices'),
               onTap: () {
-                // Navigate to invoices
               },
             ),
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Logout'),
               onTap: () {
-                // Logout logic
               },
             ),
           ],
