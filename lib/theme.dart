@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 
 final ThemeData appTheme = ThemeData(
   brightness: Brightness.dark,
-  scaffoldBackgroundColor: Color(0xFF2B2B2B), // Dark gray background
+  scaffoldBackgroundColor: Color.fromARGB(255, 39, 39, 39), // Dark gray background
   primaryColor: Color(0xFF4CAF50), // Accent color (green)
-  hintColor: Color(0xFF1E88E5), // Light blue accent
   textTheme: TextTheme(
     displayLarge: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
     bodyLarge: TextStyle(color: Color(0xFFB0B0B0), fontSize: 16),
@@ -18,9 +17,9 @@ final ThemeData appTheme = ThemeData(
     labelColor: Colors.white, // Active tab text
     unselectedLabelColor: Color(0xFFB0B0B0), // Inactive tab text
   ),
-  cardColor: Color(0xFF333333), // Card background
+  cardColor: Color.fromARGB(255, 75, 75, 75), // Card background
   buttonTheme: ButtonThemeData(
-    buttonColor: Color(0xFF4CAF50), // Install button background
+    buttonColor: Color.fromARGB(255, 42, 143, 138), // Install button background
     textTheme: ButtonTextTheme.primary,
   ),
 );

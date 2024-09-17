@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-        Navigator.pushReplacementNamed(context, '/'); // Navigate to the home screen
+        Navigator.pushReplacementNamed(context, '/home'); // Navigate to the home screen
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login failed: $e')),

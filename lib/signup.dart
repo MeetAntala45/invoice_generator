@@ -19,7 +19,7 @@ class _SignupScreenState extends State<SignupScreen> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-        Navigator.pushReplacementNamed(context, '/home'); // Navigate to the home screen
+        Navigator.pushReplacementNamed(context, '/login'); // Navigate to the home screen
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Signup failed: $e')),

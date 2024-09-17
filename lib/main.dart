@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'signup.dart';
 import 'welcomepage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'home.dart';
@@ -30,6 +31,12 @@ void main() async {
     theme: appTheme,
     title: 'Invoice Generator',
     home: SplashScreen(),
+    routes: {
+      '/welcome': (context) => WelcomePage(),
+      '/login': (context) => LoginScreen(),
+      '/signup': (context) => SignupScreen(),
+      '/home': (context) => HomePage(),
+    },
   ));
 }
 
