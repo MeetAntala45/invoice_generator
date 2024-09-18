@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'profile.dart';
 import 'signup.dart';
 import 'welcomepage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'home.dart';
 import 'theme.dart';
+
 const firebaseOptions = FirebaseOptions(
   apiKey: "AIzaSyDGymh5G8ZJAfaH2M8gjfBZIYlpUyUvRm0",
   authDomain: "invoice-6d5b4.firebaseapp.com",
@@ -30,13 +32,16 @@ void main() async {
     debugShowCheckedModeBanner: false,
     theme: appTheme,
     title: 'Invoice Generator',
-    home: SplashScreen(),
+    initialRoute: '/',
     routes: {
+      '/': (context) => SplashScreen(),
       '/welcome': (context) => WelcomePage(),
       '/login': (context) => LoginScreen(),
       '/signup': (context) => SignupScreen(),
-      '/home': (context) => HomePage(),
+      '/index': (context) => HomePage(),
+      '/profile': (context) => ProfilePage(),
     },
+
   ));
 }
 

@@ -1,90 +1,103 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// class ProfilePage extends StatefulWidget {
-//   @override
-//   State<ProfilePage> createState() => _ProfilePageState();
-// }
+class ProfilePage extends StatefulWidget {
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
 
-// class _ProfilePageState extends State<ProfilePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Color(0xFFEFF3F6),
-//       appBar: AppBar(
-//         title: Text('Profile'),
-//         centerTitle: true,
-//         backgroundColor: Colors.blueGrey[200],
-//         elevation: 0.0,
-//       ),
-//       body: Padding(
-//         padding: EdgeInsets.fromLTRB(30, 40, 30, 0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Center(
-//               child: CircleAvatar(
-//                 backgroundImage: AssetImage('../images/rohit.jpg'),
-//                 radius: 60.0,
-//               ),
-//             ),
-//             SizedBox(height: 20),
-//             Text(
-//               'NAME:',
-//               style: TextStyle(
-//                 color: Colors.black87,
-//                 letterSpacing: 1.0,
-//               ),
-//             ),
-//             SizedBox(height: 2),
-//             Text(
-//               'ROHIT SHARMA',
-//               style: TextStyle(
-//                 color: Colors.blue[900],
-//                 letterSpacing: 1.0,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 20.0,
-//               ),
-//             ),
-            
-//             SizedBox(height: 20),
-//             Row(
-//               children: [
-//                 Icon(
-//                   Icons.email_rounded,
-//                   color: Colors.deepPurple[800],
-//                 ),
-//                 SizedBox(width: 8.0),
-//                 Text(
-//                   'rohitsharma264@gmail.com',
-//                   style: TextStyle(
-//                     color: Colors.brown[800],
-//                     fontSize: 16.0,
-//                     letterSpacing: 1.0,
-//                   ),
-//                 ),
-//               ],
-//             ),
-            
-//             SizedBox(height: 40),
-//             Center(
-//               child: Column(
-//                 children: [
-//                   ElevatedButton(
-//                     onPressed: () {},
-//                     child: Text(
-//                       'Edit Profile',
-//                       style: TextStyle(color: Colors.white),
-//                     )
-//                   ),
-//                   SizedBox(height: 20),
-                  
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-    
-//     );
-//   }
-// }
+class _ProfilePageState extends State<ProfilePage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  String name = '';
+  String shopName = '';
+  String email = '';
+  String profilePicUrl = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    User? currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      String uid = currentUser.uid;
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(uid).get();
+
+      if (userDoc.exists) {
+        setState(() {
+          name = userDoc['name'];
+          shopName = userDoc['shopName'];
+          email = userDoc['email'];
+          // profilePicUrl = userDoc['profilePic'] ?? '';
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Profile Picture
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: profilePicUrl.isNotEmpty
+                  ? NetworkImage(profilePicUrl)
+                  : AssetImage('assets/user.webp') as ImageProvider,
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
+            ),
+            SizedBox(height: 20),
+            // Name
+            Text(
+              name,
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          
+            SizedBox(height: 20),
+            // Email
+            Card(
+              color: Theme.of(context).cardColor,
+              margin: EdgeInsets.symmetric(vertical: 8),
+              child: ListTile(
+                leading: Icon(Icons.email, color: Theme.of(context).primaryColor),
+                title: Text(
+                  email,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Card(
+              color: Theme.of(context).cardColor,
+              margin: EdgeInsets.symmetric(vertical: 8),
+              child: ListTile(
+                leading: Icon(Icons.store, color: Theme.of(context).primaryColor),
+                title: Text(
+                  'Shop: $shopName',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'invoice.dart';
 import 'view_invoice.dart';
-
+import 'profile.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -22,14 +22,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Assign the key to the Scaffold
+      key: _scaffoldKey, 
       appBar: AppBar(
         title: Text('Shop Name'),
         backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
-            // Open the drawer using the scaffoldKey
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
@@ -37,7 +36,10 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
-              // Profile navigation logic here
+              Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
             },
           ),
         ],

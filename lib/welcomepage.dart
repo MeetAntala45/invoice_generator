@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'login.dart'; // Import the SignIn screen
-import 'signup.dart'; // Import the SignUp screen
+import 'login.dart';
+import 'signup.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -19,14 +19,15 @@ class WelcomePage extends StatelessWidget {
           SizedBox(height: 10),
           Text(
             'Make Professional Invoices',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.displayLarge,
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 5),
           Text(
-            'Choose from a wide range of customizable templates\n'
-            'and create invoices that reflect your business.',
-            style: TextStyle(fontSize: 14, color: Colors.black54),
+            'Create Invoices and Share it with your Customer Easily',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Colors.white60, 
+            ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 20),
@@ -37,7 +38,6 @@ class WelcomePage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to the SignUp screen
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SignupScreen()),
@@ -45,6 +45,7 @@ class WelcomePage extends StatelessWidget {
                   },
                   child: Text('Sign Up'),
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor, 
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -53,14 +54,14 @@ class WelcomePage extends StatelessWidget {
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    // Navigate to the SignIn screen
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   },
-                  child: Text('Sign In'),
+                  child: Text('Sign In', style: TextStyle(color: Theme.of(context).primaryColor)),
                   style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Theme.of(context).primaryColor),
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

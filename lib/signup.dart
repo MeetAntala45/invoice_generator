@@ -33,7 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
           'name': _nameController.text,
           'shopName': _shopNameController.text,
           'email': _emailController.text,
-          'profilePic': _profilePicController.text,
+          //'profilePic': _profilePicController.text,
         });
 
         // Navigate to the login screen
@@ -154,28 +154,28 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                 ),
                 SizedBox(height: 20),
-                TextFormField(
-                  controller: _profilePicController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter profile picture URL',
-                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Profile picture URL cannot be empty';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 30),
+                // TextFormField(
+                //   controller: _profilePicController,
+                //   decoration: InputDecoration(
+                //     hintText: 'Enter profile picture URL',
+                //     hintStyle: TextStyle(color: Theme.of(context).hintColor),
+                //     filled: true,
+                //     fillColor: Theme.of(context).cardColor,
+                //     enabledBorder: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Theme.of(context).hintColor),
+                //     ),
+                //     focusedBorder: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                //     ),
+                //   ),
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Profile picture URL cannot be empty';
+                //     }
+                //     return null;
+                //   },
+                // ),
+                // SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: _signup,
                   style: ElevatedButton.styleFrom(
