@@ -15,28 +15,23 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _shopNameController = TextEditingController();
-  final _profilePicController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
   Future<void> _signup() async {
     if (_formKey.currentState?.validate() ?? false) {
       try {
-        // Create the user with email and password
         UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
 
-        // Store additional user information in Firestore
         await _firestore.collection('users').doc(userCredential.user?.uid).set({
           'name': _nameController.text,
           'shopName': _shopNameController.text,
           'email': _emailController.text,
-          //'profilePic': _profilePicController.text,
         });
 
-        // Navigate to the login screen
         Navigator.pushReplacementNamed(context, '/login');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -48,148 +43,138 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up'),
-        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('Create Account'),
+        backgroundColor: theme.primaryColor,
+        elevation: 0,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your name',
-                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                    ),
+          child: Column(
+            children: [
+              SizedBox(height: 30),
+              Text(
+                'Sign Up to Get Started!',
+                style: theme.textTheme.bodyMedium,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Please fill in the information below to create your account.',
+                style: theme.textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 40),
+              _buildTextField(
+                controller: _nameController,
+                label: 'Full Name',
+                icon: Icons.person_outline,
+                theme: theme,
+              ),
+              SizedBox(height: 20),
+              _buildTextField(
+                controller: _shopNameController,
+                label: 'Shop Name',
+                icon: Icons.storefront_outlined,
+                theme: theme,
+              ),
+              SizedBox(height: 20),
+              _buildTextField(
+                controller: _emailController,
+                label: 'Email',
+                icon: Icons.email_outlined,
+                theme: theme,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              SizedBox(height: 20),
+              _buildTextField(
+                controller: _passwordController,
+                label: 'Password',
+                icon: Icons.lock_outline,
+                theme: theme,
+                obscureText: true,
+              ),
+              SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: _signup,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.primaryColor,
+                  padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Name cannot be empty';
-                    }
-                    return null;
-                  },
+                  elevation: 5,
                 ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: _shopNameController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your shop name',
-                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                    ),
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
+                child: Text(
+                  'Already have an account? Login',
+                  style: TextStyle(
+                    color: theme.primaryColor,
+                    decoration: TextDecoration.underline,
+                    fontSize: 16,
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Shop name cannot be empty';
-                    }
-                    return null;
-                  },
                 ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your email',
-                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Email cannot be empty';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your password',
-                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                  ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Password cannot be empty';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters long';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                // TextFormField(
-                //   controller: _profilePicController,
-                //   decoration: InputDecoration(
-                //     hintText: 'Enter profile picture URL',
-                //     hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                //     filled: true,
-                //     fillColor: Theme.of(context).cardColor,
-                //     enabledBorder: OutlineInputBorder(
-                //       borderSide: BorderSide(color: Theme.of(context).hintColor),
-                //     ),
-                //     focusedBorder: OutlineInputBorder(
-                //       borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                //     ),
-                //   ),
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Profile picture URL cannot be empty';
-                //     }
-                //     return null;
-                //   },
-                // ),
-                // SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: _signup,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text('Sign Up', style: TextStyle(fontSize: 16)),
-                ),
-              ],
-            ),
+              ),
+              SizedBox(height: 20),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    required ThemeData theme,
+    TextInputType keyboardType = TextInputType.text,
+    bool obscureText = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return '$label cannot be empty';
+        }
+        if (label == 'Password' && value.length < 6) {
+          return 'Password must be at least 6 characters long';
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: theme.primaryColor),
+        filled: true,
+        fillColor: theme.cardColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        labelStyle: TextStyle(color: theme.hintColor),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: theme.hintColor),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: theme.primaryColor),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );

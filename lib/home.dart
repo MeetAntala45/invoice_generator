@@ -2,16 +2,56 @@ import 'package:flutter/material.dart';
 import 'invoice.dart';
 import 'view_invoice.dart';
 import 'profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  // Create a GlobalKey for the Scaffold
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   List<Map<String, dynamic>> recentTransactions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRecentInvoices();
+  }
+
+  Future<void> _fetchRecentInvoices() async {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    User? user = FirebaseAuth.instance.currentUser;
+    String? uid = user?.uid;
+
+    if (uid != null) {
+      try {
+        QuerySnapshot snapshot = await _firestore.collection('invoices')
+            .where('shopkeeperId', isEqualTo: uid) // Fetch invoices for the logged-in user
+            .orderBy('invoiceData.date', descending: true) // Order by date, most recent first
+            .get();
+
+        setState(() {
+          recentTransactions = snapshot.docs.map((doc) {
+            Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+            return {
+              'clientName': data['invoiceData']['clientName'],
+              'email': data['invoiceData']['email'],
+              'items': data['invoiceData']['items'],
+              'status': data['invoiceData']['status'],
+              'date': data['invoiceData']['date'], // ISO date string
+              'totalAmount': data['invoiceData']['totalAmount'],
+              'shopName': data['invoiceData']['shopName'],
+            };
+          }).toList();
+        });
+      } catch (e) {
+        print('Error fetching invoices: $e');
+      }
+    }
+  }
 
   void _addInvoice(Map<String, dynamic> invoice) {
     setState(() {
@@ -22,7 +62,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, 
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Shop Name'),
         backgroundColor: Theme.of(context).primaryColor,
@@ -36,10 +76,10 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
-              Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
-      );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
             },
           ),
         ],
@@ -61,40 +101,35 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.person),
               title: Text('Profile'),
               onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
               },
             ),
             ListTile(
               leading: Icon(Icons.help),
               title: Text('Help'),
-              onTap: () {
-              },
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(Icons.receipt_long),
               title: Text('Invoices'),
-              onTap: () {
-              },
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Logout'),
-              onTap: () {
-              },
+              onTap: () {},
             ),
           ],
         ),
       ),
-      
-        body: Padding(
+      body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Click Here to Generate New Invoice',
-              style: TextStyle(
-                fontSize: 18,
-              ),
+              style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
             Center(
@@ -169,20 +204,15 @@ class _HomePageState extends State<HomePage> {
       child: ListTile(
         title: Text(invoice['clientName'], style: Theme.of(context).textTheme.bodyMedium),
         subtitle: Text(
-          invoice['date'],
+          DateFormat('dd/MM/yyyy').format(DateTime.parse(invoice['date'])), // Format the date
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white70),
         ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              invoice['status'] == 'paid' ? 'Paid' : 'Unpaid',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: invoice['status'] == 'paid' ? Colors.green : Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        trailing: Text(
+          invoice['status'] == 'paid' ? 'Paid' : 'Unpaid',
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: invoice['status'] == 'paid' ? Colors.green : Colors.red,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         onTap: () {
           Navigator.push(

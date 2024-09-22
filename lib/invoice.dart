@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class NewInvoicePage extends StatefulWidget {
   final Function(Map<String, dynamic>) onSubmit;
@@ -10,15 +13,45 @@ class NewInvoicePage extends StatefulWidget {
 }
 
 class _NewInvoicePageState extends State<NewInvoicePage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
   final _clientNameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _dateController = TextEditingController();
   List<Map<String, String>> items = [];
   final _itemNameController = TextEditingController();
   final _itemPriceController = TextEditingController();
-  String _status = 'unpaid'; // New status field
+  String _status = 'unpaid';
+  User? user;
+  String? uid;
+  String? shopName; // Store the shopName here
 
+  @override
+  void initState() {
+    super.initState();
+    user = _auth.currentUser;
+    uid = user?.uid;
+
+    // Fetch the shopkeeper's shopName from Firebase
+    if (uid != null) {
+      _fetchShopName();
+    }
+  }
+
+  Future<void> _fetchShopName() async {
+    try {
+      DocumentSnapshot userDoc = await _firestore.collection('users').doc(uid).get();
+      if (userDoc.exists) {
+        setState(() {
+          shopName = userDoc['shopName']; // Retrieve the shopName from the user's document
+        });
+      }
+    } catch (e) {
+      print('Error fetching shopName: $e');
+    }
+  }
+
+  // Add item to the list of items
   void _addItem() {
     if (_itemNameController.text.isNotEmpty && _itemPriceController.text.isNotEmpty) {
       setState(() {
@@ -32,19 +65,41 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
     }
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      double totalAmount = items.fold(0, (sum, item) => sum + double.parse(item['price']!));
-      Map<String, dynamic> invoice = {
-        'clientName': _clientNameController.text,
-        'email': _emailController.text,
-        'date': _dateController.text,
-        'items': items,
-        'totalAmount': totalAmount,
-        'status': _status, // Add status
-      };
-      widget.onSubmit(invoice);
-      Navigator.pop(context);
+  // Submit form and save the invoice data to Firebase Firestore
+  Future<void> _submitForm() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        // Calculate total amount
+        double totalAmount = items.fold(0, (sum, item) => sum + double.parse(item['price']!));
+
+        // Create invoice data
+        Map<String, dynamic> invoiceData = {
+          'clientName': _clientNameController.text,
+          'email': _emailController.text,
+          'items': items,
+          'status': _status,
+          'date': DateTime.now().toIso8601String(), // Automatically add the date
+          'totalAmount': totalAmount,
+          'shopName': shopName, // Add the shopName to the invoice data
+        };
+
+        // Save to Firestore under the 'invoices' collection using the user's UID
+        await _firestore.collection('invoices').add({
+          'shopkeeperId': uid,
+          'invoiceData': invoiceData, // Store the invoice data
+        });
+
+        // Show success message and pop the screen
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invoice saved successfully')),
+        );
+        Navigator.pop(context); // Go back to the previous screen
+
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save invoice: $e')),
+        );
+      }
     }
   }
 
@@ -94,21 +149,6 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                   },
                 ),
                 SizedBox(height: 16),
-                TextFormField(
-                  controller: _dateController,
-                  decoration: InputDecoration(
-                    labelText: 'Date',
-                    labelStyle: TextStyle(color: Theme.of(context).hintColor),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                    ),
-                  ),
-                  style: TextStyle(color: Colors.white),
-                  validator: (value) {
-                    if (value!.isEmpty) return 'Please enter date';
-                    return null;
-                  },
-                ),
                 SizedBox(height: 20),
                 Text(
                   'Add Items',

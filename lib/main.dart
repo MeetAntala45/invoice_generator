@@ -38,7 +38,7 @@ void main() async {
       '/welcome': (context) => WelcomePage(),
       '/login': (context) => LoginScreen(),
       '/signup': (context) => SignupScreen(),
-      '/index': (context) => HomePage(),
+      '/homepage': (context) => HomePage(),
       '/profile': (context) => ProfilePage(),
     },
 
