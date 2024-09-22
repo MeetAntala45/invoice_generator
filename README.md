@@ -7,4 +7,5 @@ A Flutter-based invoice generator and management app designed for shopkeepers. T
 - **Firebase Authentication**: Allows shopkeepers to sign up, log in, and manage their accounts.
 - **Invoice Management**: Users can generate new invoices, track paid/unpaid invoices, and share or print them.
 - **Profile Management**: Users can view and update their profile information, including their profile picture, using Firebase Firestore and Firebase Storage.
+- **Firebase Integration**: Utilizes Firebase Firestore, Authentication, and Storage for data persistence and user management.
 
