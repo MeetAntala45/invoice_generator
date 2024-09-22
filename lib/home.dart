@@ -14,13 +14,31 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Map<String, dynamic>> recentTransactions = [];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String shopName = '';
 
   @override
   void initState() {
     super.initState();
     _fetchRecentInvoices();
+    _fetchUserData();
   }
 
+  Future<void> _fetchUserData() async {
+    User? currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      String uid = currentUser.uid;
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(uid).get();
+
+      if (userDoc.exists) {
+        setState(() {
+          shopName = userDoc['shopName'];
+        });
+      }
+    }
+  }
   Future<void> _fetchRecentInvoices() async {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     User? user = FirebaseAuth.instance.currentUser;
@@ -64,7 +82,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Shop Name'),
+        title: Text('$shopName'),
         backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: Icon(Icons.menu),
@@ -199,7 +217,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildTransactionItem(Map<String, dynamic> invoice) {
     return Card(
-      color: Theme.of(context).cardColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       margin: EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
         title: Text(invoice['clientName'], style: Theme.of(context).textTheme.bodyMedium),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 class NewInvoicePage extends StatefulWidget {
   final Function(Map<String, dynamic>) onSubmit;
@@ -18,9 +17,10 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
   final _formKey = GlobalKey<FormState>();
   final _clientNameController = TextEditingController();
   final _emailController = TextEditingController();
-  List<Map<String, String>> items = [];
+  List<Map<String, dynamic>> items = []; // Change type to dynamic to accommodate quantity
   final _itemNameController = TextEditingController();
   final _itemPriceController = TextEditingController();
+  final _itemQuantityController = TextEditingController(); // Controller for quantity
   String _status = 'unpaid';
   User? user;
   String? uid;
@@ -40,7 +40,8 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
 
   Future<void> _fetchShopName() async {
     try {
-      DocumentSnapshot userDoc = await _firestore.collection('users').doc(uid).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(uid).get();
       if (userDoc.exists) {
         setState(() {
           shopName = userDoc['shopName']; // Retrieve the shopName from the user's document
@@ -53,14 +54,18 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
 
   // Add item to the list of items
   void _addItem() {
-    if (_itemNameController.text.isNotEmpty && _itemPriceController.text.isNotEmpty) {
+    if (_itemNameController.text.isNotEmpty &&
+        _itemPriceController.text.isNotEmpty &&
+        _itemQuantityController.text.isNotEmpty) {
       setState(() {
         items.add({
           'name': _itemNameController.text,
           'price': _itemPriceController.text,
+          'quantity': _itemQuantityController.text, // Add quantity to the item
         });
         _itemNameController.clear();
         _itemPriceController.clear();
+        _itemQuantityController.clear(); // Clear the quantity field
       });
     }
   }
@@ -70,7 +75,11 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
     if (_formKey.currentState?.validate() ?? false) {
       try {
         // Calculate total amount
-        double totalAmount = items.fold(0, (sum, item) => sum + double.parse(item['price']!));
+        double totalAmount = items.fold(0, (sum, item) {
+          double price = double.parse(item['price']!);
+          int quantity = int.parse(item['quantity']!);
+          return sum + (price * quantity); // Multiply price by quantity
+        });
 
         // Create invoice data
         Map<String, dynamic> invoiceData = {
@@ -94,7 +103,6 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
           SnackBar(content: Text('Invoice saved successfully')),
         );
         Navigator.pop(context); // Go back to the previous screen
-
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to save invoice: $e')),
@@ -123,7 +131,8 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                     labelText: 'Client Name',
                     labelStyle: TextStyle(color: Theme.of(context).hintColor),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).hintColor),
                     ),
                   ),
                   style: TextStyle(color: Colors.white),
@@ -139,7 +148,8 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                     labelText: 'Email',
                     labelStyle: TextStyle(color: Theme.of(context).hintColor),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).hintColor),
                     ),
                   ),
                   style: TextStyle(color: Colors.white),
@@ -152,7 +162,10 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                 SizedBox(height: 20),
                 Text(
                   'Add Items',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 TextFormField(
                   controller: _itemNameController,
@@ -160,7 +173,8 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                     labelText: 'Item Name',
                     labelStyle: TextStyle(color: Theme.of(context).hintColor),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).hintColor),
                     ),
                   ),
                   style: TextStyle(color: Colors.white),
@@ -171,11 +185,25 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                     labelText: 'Item Price',
                     labelStyle: TextStyle(color: Theme.of(context).hintColor),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).hintColor),
                     ),
                   ),
                   style: TextStyle(color: Colors.white),
                   keyboardType: TextInputType.number,
+                ),
+                TextFormField(
+                  controller: _itemQuantityController,
+                  decoration: InputDecoration(
+                    labelText: 'Item Quantity', // Add field for item quantity
+                    labelStyle: TextStyle(color: Theme.of(context).hintColor),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Theme.of(context).hintColor),
+                    ),
+                  ),
+                  style: TextStyle(color: Colors.white),
+                  keyboardType: TextInputType.number, // Quantity should be a number
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
@@ -185,7 +213,8 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                 SizedBox(height: 20),
                 ...items.map((item) => ListTile(
                       title: Text(item['name']!),
-                      subtitle: Text('\$${item['price']}'),
+                      subtitle: Text(
+                          '\$${item['price']} x ${item['quantity']} = \$${(double.parse(item['price']!) * int.parse(item['quantity']!)).toStringAsFixed(2)}'),
                     )),
                 SizedBox(height: 20),
                 DropdownButtonFormField<String>(
@@ -194,7 +223,8 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                     labelText: 'Status',
                     labelStyle: TextStyle(color: Theme.of(context).hintColor),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).hintColor),
                     ),
                   ),
                   items: [
