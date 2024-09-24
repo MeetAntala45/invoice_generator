@@ -17,14 +17,14 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
   final _formKey = GlobalKey<FormState>();
   final _clientNameController = TextEditingController();
   final _emailController = TextEditingController();
-  List<Map<String, dynamic>> items = []; // Change type to dynamic to accommodate quantity
+  List<Map<String, dynamic>> items = [];
   final _itemNameController = TextEditingController();
   final _itemPriceController = TextEditingController();
-  final _itemQuantityController = TextEditingController(); // Controller for quantity
+  final _itemQuantityController = TextEditingController(text: '1'); // Default quantity to 1
   String _status = 'unpaid';
   User? user;
   String? uid;
-  String? shopName; // Store the shopName here
+  String? shopName;
 
   @override
   void initState() {
@@ -32,7 +32,6 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
     user = _auth.currentUser;
     uid = user?.uid;
 
-    // Fetch the shopkeeper's shopName from Firebase
     if (uid != null) {
       _fetchShopName();
     }
@@ -44,7 +43,7 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
           await _firestore.collection('users').doc(uid).get();
       if (userDoc.exists) {
         setState(() {
-          shopName = userDoc['shopName']; // Retrieve the shopName from the user's document
+          shopName = userDoc['shopName'];
         });
       }
     } catch (e) {
@@ -52,7 +51,6 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
     }
   }
 
-  // Add item to the list of items
   void _addItem() {
     if (_itemNameController.text.isNotEmpty &&
         _itemPriceController.text.isNotEmpty &&
@@ -61,48 +59,43 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
         items.add({
           'name': _itemNameController.text,
           'price': _itemPriceController.text,
-          'quantity': _itemQuantityController.text, // Add quantity to the item
+          'quantity': _itemQuantityController.text,
         });
         _itemNameController.clear();
         _itemPriceController.clear();
-        _itemQuantityController.clear(); // Clear the quantity field
+        _itemQuantityController.text = '1'; // Reset to default value of 1
       });
     }
   }
 
-  // Submit form and save the invoice data to Firebase Firestore
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       try {
-        // Calculate total amount
         double totalAmount = items.fold(0, (sum, item) {
           double price = double.parse(item['price']!);
           int quantity = int.parse(item['quantity']!);
-          return sum + (price * quantity); // Multiply price by quantity
+          return sum + (price * quantity);
         });
 
-        // Create invoice data
         Map<String, dynamic> invoiceData = {
           'clientName': _clientNameController.text,
           'email': _emailController.text,
           'items': items,
           'status': _status,
-          'date': DateTime.now().toIso8601String(), // Automatically add the date
+          'date': DateTime.now().toIso8601String(),
           'totalAmount': totalAmount,
-          'shopName': shopName, // Add the shopName to the invoice data
+          'shopName': shopName,
         };
 
-        // Save to Firestore under the 'invoices' collection using the user's UID
         await _firestore.collection('invoices').add({
           'shopkeeperId': uid,
-          'invoiceData': invoiceData, // Store the invoice data
+          'invoiceData': invoiceData,
         });
 
-        // Show success message and pop the screen
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Invoice saved successfully')),
         );
-        Navigator.pop(context); // Go back to the previous screen
+        Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to save invoice: $e')),
@@ -195,7 +188,7 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                 TextFormField(
                   controller: _itemQuantityController,
                   decoration: InputDecoration(
-                    labelText: 'Item Quantity', // Add field for item quantity
+                    labelText: 'Item Quantity',
                     labelStyle: TextStyle(color: Theme.of(context).hintColor),
                     enabledBorder: OutlineInputBorder(
                       borderSide:
@@ -203,7 +196,7 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                     ),
                   ),
                   style: TextStyle(color: Colors.white),
-                  keyboardType: TextInputType.number, // Quantity should be a number
+                  keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(

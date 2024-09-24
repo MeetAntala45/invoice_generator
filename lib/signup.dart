@@ -18,6 +18,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
+  // Default profile picture URL (can be local asset or Firebase Storage URL)
+  final String _defaultProfilePicUrl = 'assets/user.webp'; // Use Firebase URL if uploaded to storage
+
   Future<void> _signup() async {
     if (_formKey.currentState?.validate() ?? false) {
       try {
@@ -26,12 +29,15 @@ class _SignupScreenState extends State<SignupScreen> {
           password: _passwordController.text,
         );
 
+        // Store the user data in Firestore with default profile picture
         await _firestore.collection('users').doc(userCredential.user?.uid).set({
           'name': _nameController.text,
           'shopName': _shopNameController.text,
           'email': _emailController.text,
+          'profilePic': _defaultProfilePicUrl,  // Storing the default profile picture URL
         });
 
+        // Navigate to the login page after successful signup
         Navigator.pushReplacementNamed(context, '/login');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -136,6 +142,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
+  // Helper function to build text fields
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,

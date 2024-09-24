@@ -1,16 +1,10 @@
-# invoice_generator
+# Invoice Generator Flutter App
 
-A new Flutter project.
+A Flutter-based invoice generator and management app designed for shopkeepers. The app allows users to create, manage, and send invoices, and it supports user authentication using Firebase. The profile page includes functionality for viewing and updating user information such as name, shop name, email, and profile picture.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Firebase Authentication**: Allows shopkeepers to sign up, log in, and manage their accounts.
+- **Invoice Management**: Users can generate new invoices, track paid/unpaid invoices, and share or print them.
+- **Profile Management**: Users can view and update their profile information, including their profile picture, using Firebase Firestore and Firebase Storage.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
