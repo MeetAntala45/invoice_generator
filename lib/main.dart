@@ -39,8 +39,7 @@ void main() async {
       '/login': (context) => LoginScreen(),
       '/signup': (context) => SignupScreen(),
       '/homepage': (context) => HomePage(),
-      '/profile': (context) => ProfilePage(),
-      
+      '/profile': (context) => ProfilePage(),  
     },
 
   ));
