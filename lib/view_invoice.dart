@@ -31,13 +31,17 @@ class ViewInvoicePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+                        Divider(thickness: 2),
+
             Text(
-              'Client Name: ${invoice['clientName'] ?? 'N/A'}',
+              'Customer Name: ${invoice['clientName'] ?? 'N/A'}',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
             ),
+                        Divider(thickness: 2),
+
             SizedBox(height: 8),
             Text(
               'Email: ${invoice['email'] ?? 'N/A'}',
@@ -48,7 +52,7 @@ class ViewInvoicePage extends StatelessWidget {
                'Date: ${invoice['date'] != null ? DateFormat('dd/MM/yyyy').format(DateTime.parse(invoice['date'])) : 'N/A'}',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 25),
             Text(
               'Items',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -61,13 +65,13 @@ class ViewInvoicePage extends StatelessWidget {
               columnWidths: {
                 0: FlexColumnWidth(3),
                 1: FlexColumnWidth(1),
-                2: FlexColumnWidth(1),
-                3: FlexColumnWidth(1),
+                2: FlexColumnWidth(2),
+                3: FlexColumnWidth(2),
               },
               border: TableBorder.all(color: const Color.fromARGB(255, 199, 199, 199), width: 1),
               children: [
                 TableRow(
-                  decoration: BoxDecoration(color: const Color.fromARGB(255, 112, 112, 112)),
+                  decoration: BoxDecoration(color: const Color.fromARGB(255, 148, 148, 148)),
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -79,7 +83,7 @@ class ViewInvoicePage extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('Price per Quantity', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text('Price', style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -89,7 +93,7 @@ class ViewInvoicePage extends StatelessWidget {
                 ),
                 ...?invoice['items']?.map<TableRow>((item) {
                   int quantity = int.parse(item['quantity'] ?? '0');
-                  double price = double.parse(item['pricePerQuantity'] ?? '0');
+                  double price = double.parse(item['price'] ?? '0');
                   double itemTotal = price * quantity;
 
                   return TableRow(children: [
@@ -103,11 +107,11 @@ class ViewInvoicePage extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('\$${price.toStringAsFixed(2)}'),
+                      child: Text('\u{20B9}${price.toStringAsFixed(2)}'),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('\$${itemTotal.toStringAsFixed(2)}'),
+                      child: Text('\u{20B9}${itemTotal.toStringAsFixed(2)}'),
                     ),
                   ]);
                 })?.toList() ?? [],
@@ -116,7 +120,7 @@ class ViewInvoicePage extends StatelessWidget {
             Divider(thickness: 2),
             SizedBox(height: 16),
             Text(
-              'Total Amount: \$${totalAmount.toStringAsFixed(2)}',
+              'Total: \u{20B9}${invoice['totalAmount'].toStringAsFixed(2)}',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -132,10 +136,7 @@ class ViewInvoicePage extends StatelessWidget {
                   ),
             ),
             SizedBox(height: 8),
-            Text(
-              'Shopkeeper: ${invoice['shopkeeperName'] ?? 'N/A'}',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 18),
-            ),
+            
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,7 +148,7 @@ class ViewInvoicePage extends StatelessWidget {
                     },
                     icon: Icon(Icons.download),
                     label: Text('Download'),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 0, 0, 0)),
                   ),
                 ),
                 SizedBox(width: 10),
@@ -235,8 +236,8 @@ class ViewInvoicePage extends StatelessWidget {
                     return [
                       item['name'] ?? 'N/A',
                       item['quantity'] ?? '0',
-                      '\$${item['pricePerQuantity'] ?? '0'}',
-                      '\$${(double.parse(item['pricePerQuantity'] ?? '0') * int.parse(item['quantity'] ?? '0')).toStringAsFixed(2)}',
+                      '${item['price'] ?? '0'}',
+                      '${(double.parse(item['price'] ?? '0') * int.parse(item['quantity'] ?? '0')).toStringAsFixed(2)}',
                     ];
                   }).toList()
                 ],
@@ -246,7 +247,7 @@ class ViewInvoicePage extends StatelessWidget {
               // Subtotal and Thank You
               pw.Align(
                 alignment: pw.Alignment.centerRight,
-                child: pw.Text('Subtotal: \$${invoice['totalAmount'] ?? '0.00'}', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                child: pw.Text('Subtotal: ${invoice['totalAmount'] ?? '0.00'}', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
               ),
               pw.SizedBox(height: 40),
               pw.Align(

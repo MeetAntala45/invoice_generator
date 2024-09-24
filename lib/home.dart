@@ -28,9 +28,8 @@ class _HomePageState extends State<HomePage> {
   Future<void> _fetchUserData() async {
     User? currentUser = _auth.currentUser;
     if (currentUser != null) {
-      String uid = currentUser.uid;
       DocumentSnapshot userDoc =
-          await _firestore.collection('users').doc(uid).get();
+          await _firestore.collection('users').doc(currentUser.uid).get();
 
       if (userDoc.exists) {
         setState(() {
@@ -41,13 +40,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchRecentInvoices() async {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    User? user = FirebaseAuth.instance.currentUser;
+    User? user = _auth.currentUser;
     String? uid = user?.uid;
 
     if (uid != null) {
       try {
-        QuerySnapshot snapshot = await _firestore.collection('invoices')
+        QuerySnapshot snapshot = await _firestore
+            .collection('invoices')
             .where('shopkeeperId', isEqualTo: uid) // Fetch invoices for the logged-in user
             .orderBy('invoiceData.date', descending: true) // Order by date, most recent first
             .get();
@@ -83,7 +82,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('$shopName'),
+        title: Text(shopName),
         backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: Icon(Icons.menu),
@@ -113,7 +112,7 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Text(
                 'Menu',
-                style: Theme.of(context).textTheme.displayLarge,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
             ListTile(
@@ -133,7 +132,8 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.logout),
               title: Text('Logout'),
               onTap: () {
-                
+                _auth.signOut();
+                Navigator.of(context).pop(); // Close the drawer
               },
             ),
           ],
@@ -171,8 +171,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Text('New Invoice',
-                        style: Theme.of(context).textTheme.bodyMedium),
+                    Text('New Invoice', style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
               ),
@@ -189,7 +188,7 @@ class _HomePageState extends State<HomePage> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-        color:Color.fromARGB(255, 243, 243, 243),
+          color: Color.fromARGB(255, 243, 243, 243),
           borderRadius: BorderRadius.circular(8),
         ),
         padding: EdgeInsets.all(16),
@@ -198,7 +197,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text(
               'Recent Invoices',
-              style: Theme.of(context).textTheme.displayLarge,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             SizedBox(height: 16),
             Expanded(
@@ -217,34 +216,35 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildTransactionItem(Map<String, dynamic> invoice) {
     return Card(
-      color:Color.fromARGB(255, 233, 233, 233),
+      color: Color.fromARGB(255, 233, 233, 233),
       margin: EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
-        title: Text(invoice['clientName'],
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    ),
-                ),
+        title: Text(
+          invoice['clientName'],
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(invoice['date']))}', // Format the date
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: const Color.fromARGB(255, 0, 0, 0),
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
             ),
             Text(
               'Total: \u{20B9}${invoice['totalAmount'].toStringAsFixed(2)}',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: const Color.fromARGB(255, 0, 0, 0),
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
             ),
           ],
         ),
         trailing: Text(
           invoice['status'] == 'paid' ? 'Paid' : 'Unpaid',
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                 color: invoice['status'] == 'paid' ? Colors.green : Colors.red,
                 fontWeight: FontWeight.bold,
               ),
