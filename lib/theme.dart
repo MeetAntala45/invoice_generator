@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 final ThemeData appTheme = ThemeData(
   brightness: Brightness.light,
   scaffoldBackgroundColor: Colors.white,
-  primaryColor: Color(0xFF0A74DA), // Professional blue color
-  hintColor: Color(0xFF0A74DA),
+  primaryColor: Color.fromARGB(255, 168, 168, 168),
+  hintColor: Color(0xFFC0C0C0),
   textTheme: TextTheme(
     displayLarge: TextStyle(
       color: Colors.black, 
@@ -22,21 +22,21 @@ final ThemeData appTheme = ThemeData(
   ),
   tabBarTheme: TabBarTheme(
     indicator: BoxDecoration(
-      color: Color(0xFF0A74DA), // Matches primary color
+      color: Color(0xFFC0C0C0),
     ),
     labelColor: Colors.white,
     unselectedLabelColor: Colors.black54,
   ),
   cardColor: Colors.white,
   cardTheme: CardTheme(
-    shadowColor: Colors.grey.withOpacity(0.3),
+    shadowColor: Colors.grey.withOpacity(0.5),
     elevation: 5,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8),
     ),
   ),
   buttonTheme: ButtonThemeData(
-    buttonColor: Color(0xFF0A74DA), // Professional blue color for buttons
+    buttonColor: Color.fromARGB(255, 139, 139, 139),
     textTheme: ButtonTextTheme.primary,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(5),
@@ -45,14 +45,15 @@ final ThemeData appTheme = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color(0xFF0A74DA)),
+      borderSide: BorderSide(color: Color(0xFFC0C0C0)),
     ),
     labelStyle: TextStyle(color: Colors.black54),
   ),
   appBarTheme: AppBarTheme(
-    backgroundColor: Color(0xFF0A74DA),
+    backgroundColor: Color(0xFFC0C0C0),
     foregroundColor: Colors.white,
     elevation: 2,
     titleTextStyle: TextStyle(
