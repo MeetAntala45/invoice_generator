@@ -66,14 +66,10 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 30),
               Text(
                 'Sign Up to Get Started!',
-                style: theme.textTheme.bodyMedium,
+                style: theme.textTheme.displayLarge,
               ),
               SizedBox(height: 10),
-              Text(
-                'Please fill in the information below to create your account.',
-                style: theme.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
+              
               SizedBox(height: 40),
               _buildTextField(
                 controller: _nameController,
@@ -141,8 +137,6 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
-
-  // Helper function to build text fields
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 final ThemeData appTheme = ThemeData(
   brightness: Brightness.light,
   scaffoldBackgroundColor: Colors.white,
-  primaryColor: Color.fromARGB(255, 168, 168, 168),
+  primaryColor: Color.fromARGB(255, 99, 98, 98),
   hintColor: Color(0xFFC0C0C0),
   textTheme: TextTheme(
     displayLarge: TextStyle(

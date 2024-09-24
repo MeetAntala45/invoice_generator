@@ -58,7 +58,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 40),
-                // Email Field
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -85,7 +84,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 SizedBox(height: 20),
-                // Password Field
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
@@ -112,24 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 SizedBox(height: 10),
-                // Forgot Password
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // TODO: Add Forgot Password Logic
-                    },
-                    child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                
                 SizedBox(height: 30),
-                // Login Button
                 ElevatedButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
@@ -141,11 +123,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: Text(
                     'Login',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 18,color:Colors.white),
                   ),
                 ),
                 SizedBox(height: 20),
-                // Signup Option
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

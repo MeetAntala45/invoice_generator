@@ -48,7 +48,7 @@ class WelcomePage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => SignupScreen()),
                       );
                     },
-                    child: Text('Sign Up'),
+                    child: Text('Sign Up',style: TextStyle(color:Colors.white),),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).primaryColor,
                       padding: EdgeInsets.symmetric(vertical: 15),
@@ -67,7 +67,7 @@ class WelcomePage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => LoginScreen()),
                       );
                     },
-                    child: Text('Sign In', style: TextStyle(color: Theme.of(context).primaryColor)),
+                    child: Text('Sign In', style: TextStyle(color:Colors.black)),
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: Theme.of(context).primaryColor),
                       padding: EdgeInsets.symmetric(vertical: 15),

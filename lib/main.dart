@@ -40,6 +40,7 @@ void main() async {
       '/signup': (context) => SignupScreen(),
       '/homepage': (context) => HomePage(),
       '/profile': (context) => ProfilePage(),
+      
     },
 
   ));
