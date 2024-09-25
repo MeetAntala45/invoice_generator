@@ -33,7 +33,6 @@ class ViewInvoicePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-                        Divider(thickness: 2),
 
             Text(
               'Customer Name: ${invoice['clientName'] ?? 'N/A'}',
@@ -42,7 +41,7 @@ class ViewInvoicePage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
             ),
-                        Divider(thickness: 2),
+            Divider(thickness: 2),
 
             SizedBox(height: 8),
             Text(
@@ -109,11 +108,11 @@ class ViewInvoicePage extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('\u{20B9}${price.toStringAsFixed(2)}'),
+                      child: Text('${price.toStringAsFixed(2)}'),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('\u{20B9}${itemTotal.toStringAsFixed(2)}'),
+                      child: Text('${itemTotal.toStringAsFixed(2)}'),
                     ),
                   ]);
                 })?.toList() ?? [],
@@ -148,22 +147,12 @@ class ViewInvoicePage extends StatelessWidget {
                     onPressed: () {
                       _downloadPdf(invoice);
                     },
-                    icon: Icon(Icons.download),
-                    label: Text('Download'),
+                    icon: Icon(Icons.download, color: Colors.white,),
+                    label: Text('Download',style: TextStyle(color:Colors.white)),
                     style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 0, 0, 0)),
                   ),
                 ),
                 SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      _sharePdf(invoice);
-                    },
-                    icon: Icon(Icons.share),
-                    label: Text('Share via Email'),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                  ),
-                ),
               ],
             ),
           ],
@@ -172,19 +161,12 @@ class ViewInvoicePage extends StatelessWidget {
     );
   }
 
-  // Generate and Download PDF
   Future<void> _downloadPdf(Map<String, dynamic> invoice) async {
-    final pdf = _generatePdf(invoice);
-    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
-  }
-
-  // Share PDF
-  Future<void> _sharePdf(Map<String, dynamic> invoice) async {
     final pdf = _generatePdf(invoice);
     await Printing.sharePdf(bytes: await pdf.save(), filename: 'invoice.pdf');
   }
 
-  // PDF Generator
+
   pw.Document _generatePdf(Map<String, dynamic> invoice) {
     final pdf = pw.Document();
 
@@ -194,7 +176,6 @@ class ViewInvoicePage extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // Top Header with Shop Name and Invoice
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -210,7 +191,6 @@ class ViewInvoicePage extends StatelessWidget {
               ),
               pw.SizedBox(height: 20),
               
-              // Invoice to Client and Date
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -230,7 +210,6 @@ class ViewInvoicePage extends StatelessWidget {
               ),
               pw.SizedBox(height: 20),
               
-              // Table for Items
               pw.Table.fromTextArray(
                 headers: ['Item Name', 'Quantity', 'Price', 'Total'],
                 data: [
@@ -246,7 +225,6 @@ class ViewInvoicePage extends StatelessWidget {
               ),
               pw.SizedBox(height: 20),
               
-              // Subtotal and Thank You
               pw.Align(
                 alignment: pw.Alignment.centerRight,
                 child: pw.Text('Subtotal: ${invoice['totalAmount'] ?? '0.00'}', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),

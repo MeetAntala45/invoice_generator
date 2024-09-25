@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:typed_data'; // For Uint8List
-import 'dart:io'; // For mobile devices
+import 'dart:typed_data';
+import 'dart:io';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -47,7 +47,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Function to pick image from gallery
   Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -63,7 +62,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Function to upload image to Firebase Storage
   Future<void> _uploadProfilePicture(dynamic image) async {
     setState(() {
       isUploading = true;
@@ -86,16 +84,15 @@ class _ProfilePageState extends State<ProfilePage> {
         TaskSnapshot taskSnapshot = await uploadTask;
         String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-        // Update Firestore with the new profile picture URL
+
         await _firestore.collection('users').doc(uid).update({
           'profilePic': downloadUrl,
         });
-        // Update local state
         setState(() {
           profilePicUrl = downloadUrl;
         });
         print('$profilePicUrl');
-
+        _fetchUserData();
       }
     } catch (e) {
       print('Error uploading profile picture: $e');
@@ -112,23 +109,29 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Text('Profile'),
         backgroundColor: Theme.of(context).primaryColor,
+        elevation: 0,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Larger Profile Picture
-            CircleAvatar(
-              radius: 70, // Increased radius
-              backgroundImage: profilePicUrl.isNotEmpty
-                  ? NetworkImage(profilePicUrl)
-                  : AssetImage('assets/user.webp') as ImageProvider,
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
-              onBackgroundImageError: (_, __) {
-                // Error handling if image fails to load
-                print('Error loading profile picture.');
-              },
+            Center(
+              child: CircleAvatar(
+                radius: 70,
+                backgroundImage: profilePicUrl.isNotEmpty
+                    ? NetworkImage(profilePicUrl)
+                    : AssetImage('assets/user.webp') as ImageProvider,
+                backgroundColor:
+                    Theme.of(context).primaryColor.withOpacity(0.2),
+                child: profilePicUrl.isEmpty
+                    ? Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Theme.of(context).primaryColor.withOpacity(0.7),
+                      )
+                    : null,
+              ),
             ),
             SizedBox(height: 20),
             isUploading
@@ -137,25 +140,39 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: _pickImage,
                     icon: Icon(Icons.camera_alt),
                     label: Text('Update Photo'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 24.0),
+                    ),
                   ),
             SizedBox(height: 20),
-            // Name
             Text(
-              name,
-              style: Theme.of(context).textTheme.titleLarge,
+              name.isNotEmpty ? name : 'Your Name',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
             ),
             SizedBox(height: 10),
-            // Shop Name
             Text(
-              'Shop: $shopName',
-              style: Theme.of(context).textTheme.titleMedium,
+              shopName.isNotEmpty ? 'Shop: $shopName' : 'Shop Name',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.grey[700],
+                  ),
             ),
             SizedBox(height: 10),
-            // Email
             Text(
-              email,
-              style: Theme.of(context).textTheme.titleSmall,
+              email.isNotEmpty ? email : 'Email',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.grey[500],
+                  ),
             ),
+            SizedBox(height: 40),
+            
           ],
         ),
       ),
