@@ -3,7 +3,6 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'dart:typed_data';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:intl/intl.dart';
 
 class ViewInvoicePage extends StatelessWidget {
@@ -33,7 +32,6 @@ class ViewInvoicePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Text(
               'Customer Name: ${invoice['clientName'] ?? 'N/A'}',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -42,7 +40,6 @@ class ViewInvoicePage extends StatelessWidget {
                   ),
             ),
             Divider(thickness: 2),
-
             SizedBox(height: 8),
             Text(
               'Email: ${invoice['email'] ?? 'N/A'}',
@@ -147,8 +144,8 @@ class ViewInvoicePage extends StatelessWidget {
                     onPressed: () {
                       _downloadPdf(invoice);
                     },
-                    icon: Icon(Icons.download, color: Colors.white,),
-                    label: Text('Download',style: TextStyle(color:Colors.white)),
+                    icon: Icon(Icons.download, color: Colors.white),
+                    label: Text('Download', style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 0, 0, 0)),
                   ),
                 ),
@@ -166,7 +163,6 @@ class ViewInvoicePage extends StatelessWidget {
     await Printing.sharePdf(bytes: await pdf.save(), filename: 'invoice.pdf');
   }
 
-
   pw.Document _generatePdf(Map<String, dynamic> invoice) {
     final pdf = pw.Document();
 
@@ -176,21 +172,31 @@ class ViewInvoicePage extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text(
-                    invoice['shopName'] ?? 'Shop Name',
-                    style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
-                  ),
-                  pw.Text(
-                    'Invoice',
-                    style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
-                  ),
-                ],
+              // Shop Name and Address
+              pw.Center(
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  children: [
+                    pw.Text(
+                      invoice['shopName'] ?? 'Shop Name',
+                      style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Text(
+                      invoice['shopAddress'] ?? 'Shop Address',
+                      style: pw.TextStyle(fontSize: 16),
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Text(
+                      'Mobile: ${invoice['shopMobile'] ?? 'N/A'}',
+                      style: pw.TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
               pw.SizedBox(height: 20),
               
+              // Date and Customer Details
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -203,13 +209,14 @@ class ViewInvoicePage extends StatelessWidget {
                     ],
                   ),
                   pw.Text(
-                    'Date: ${invoice['date'] ?? 'N/A'}',
+                    'Date: ${invoice['date'] != null ? DateFormat('dd/MM/yyyy').format(DateTime.parse(invoice['date'])) : 'N/A'}',
                     style: pw.TextStyle(fontSize: 16),
                   ),
                 ],
               ),
               pw.SizedBox(height: 20),
-              
+
+              // Items Table
               pw.Table.fromTextArray(
                 headers: ['Item Name', 'Quantity', 'Price', 'Total'],
                 data: [
@@ -225,6 +232,7 @@ class ViewInvoicePage extends StatelessWidget {
               ),
               pw.SizedBox(height: 20),
               
+              // Subtotal and Thank you
               pw.Align(
                 alignment: pw.Alignment.centerRight,
                 child: pw.Text('Subtotal: ${invoice['totalAmount'] ?? '0.00'}', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),

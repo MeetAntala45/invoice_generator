@@ -15,6 +15,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _shopNameController = TextEditingController();
+  final _addressController = TextEditingController(); // New field for Address
+  final _mobileNoController = TextEditingController(); // New field for Mobile Number
 
   final _formKey = GlobalKey<FormState>();
 
@@ -34,7 +36,9 @@ class _SignupScreenState extends State<SignupScreen> {
           'name': _nameController.text,
           'shopName': _shopNameController.text,
           'email': _emailController.text,
-          'profilePic': _defaultProfilePicUrl,  // Storing the default profile picture URL
+          'profilePic': _defaultProfilePicUrl,
+          'address': _addressController.text, // Store address in Firestore
+          'mobileNo': _mobileNoController.text, // Store mobile number in Firestore
         });
 
         // Navigate to the login page after successful signup
@@ -69,7 +73,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 style: theme.textTheme.displayLarge,
               ),
               SizedBox(height: 10),
-              
               SizedBox(height: 40),
               _buildTextField(
                 controller: _nameController,
@@ -83,6 +86,21 @@ class _SignupScreenState extends State<SignupScreen> {
                 label: 'Shop Name',
                 icon: Icons.storefront_outlined,
                 theme: theme,
+              ),
+              SizedBox(height: 20),
+              _buildTextField(
+                controller: _addressController,
+                label: 'Address', // New Address field
+                icon: Icons.location_on_outlined,
+                theme: theme,
+              ),
+              SizedBox(height: 20),
+              _buildTextField(
+                controller: _mobileNoController,
+                label: 'Mobile No', // New Mobile Number field
+                icon: Icons.phone_outlined,
+                theme: theme,
+                keyboardType: TextInputType.phone,
               ),
               SizedBox(height: 20),
               _buildTextField(
@@ -137,6 +155,7 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
+
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
