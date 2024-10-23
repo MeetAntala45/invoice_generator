@@ -84,7 +84,6 @@ class _ProfilePageState extends State<ProfilePage> {
         TaskSnapshot taskSnapshot = await uploadTask;
         String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-
         await _firestore.collection('users').doc(uid).update({
           'profilePic': downloadUrl,
         });
@@ -141,7 +140,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icon(Icons.camera_alt),
                     label: Text('Update Photo'),
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -172,7 +172,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
             ),
             SizedBox(height: 40),
-            
           ],
         ),
       ),

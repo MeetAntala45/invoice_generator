@@ -15,33 +15,31 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _shopNameController = TextEditingController();
-  final _addressController = TextEditingController(); // New field for Address
-  final _mobileNoController = TextEditingController(); // New field for Mobile Number
+  final _addressController = TextEditingController();
+  final _mobileNoController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
-  // Default profile picture URL (can be local asset or Firebase Storage URL)
-  final String _defaultProfilePicUrl = 'assets/user.webp'; // Use Firebase URL if uploaded to storage
+  final String _defaultProfilePicUrl = 'assets/user.webp';
 
   Future<void> _signup() async {
     if (_formKey.currentState?.validate() ?? false) {
       try {
-        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
 
-        // Store the user data in Firestore with default profile picture
         await _firestore.collection('users').doc(userCredential.user?.uid).set({
           'name': _nameController.text,
           'shopName': _shopNameController.text,
           'email': _emailController.text,
           'profilePic': _defaultProfilePicUrl,
-          'address': _addressController.text, // Store address in Firestore
-          'mobileNo': _mobileNoController.text, // Store mobile number in Firestore
+          'address': _addressController.text,
+          'mobileNo': _mobileNoController.text,
         });
 
-        // Navigate to the login page after successful signup
         Navigator.pushReplacementNamed(context, '/login');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -70,10 +68,15 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 30),
               Text(
                 'Sign Up to Get Started!',
-                style: theme.textTheme.displayLarge,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: 10),
-              SizedBox(height: 40),
+              SizedBox(height: 20),
               _buildTextField(
                 controller: _nameController,
                 label: 'Full Name',
@@ -90,14 +93,14 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 20),
               _buildTextField(
                 controller: _addressController,
-                label: 'Address', // New Address field
+                label: 'Address',
                 icon: Icons.location_on_outlined,
                 theme: theme,
               ),
               SizedBox(height: 20),
               _buildTextField(
                 controller: _mobileNoController,
-                label: 'Mobile No', // New Mobile Number field
+                label: 'Mobile No',
                 icon: Icons.phone_outlined,
                 theme: theme,
                 keyboardType: TextInputType.phone,

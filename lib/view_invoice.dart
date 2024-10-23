@@ -43,12 +43,18 @@ class ViewInvoicePage extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               'Email: ${invoice['email'] ?? 'N/A'}',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontSize: 16),
             ),
             SizedBox(height: 8),
             Text(
-               'Date: ${invoice['date'] != null ? DateFormat('dd/MM/yyyy').format(DateTime.parse(invoice['date'])) : 'N/A'}',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16),
+              'Date: ${invoice['date'] != null ? DateFormat('dd/MM/yyyy').format(DateTime.parse(invoice['date'])) : 'N/A'}',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontSize: 16),
             ),
             SizedBox(height: 25),
             Text(
@@ -61,58 +67,65 @@ class ViewInvoicePage extends StatelessWidget {
             Divider(thickness: 2),
             Table(
               columnWidths: {
-                0: FlexColumnWidth(3),
+                0: FlexColumnWidth(2.5),
                 1: FlexColumnWidth(1),
                 2: FlexColumnWidth(2),
                 3: FlexColumnWidth(2),
               },
-              border: TableBorder.all(color: const Color.fromARGB(255, 199, 199, 199), width: 1),
+              border: TableBorder.all(
+                  color: const Color.fromARGB(255, 199, 199, 199), width: 1),
               children: [
                 TableRow(
-                  decoration: BoxDecoration(color: const Color.fromARGB(255, 148, 148, 148)),
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 148, 148, 148)),
                   children: [
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('Item Name', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text('Item Name',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('Quantity', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text('Quantity',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('Price', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text('Price',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('Total', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: Text('Total',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
                 ...?invoice['items']?.map<TableRow>((item) {
-                  int quantity = int.parse(item['quantity'] ?? '0');
-                  double price = double.parse(item['price'] ?? '0');
-                  double itemTotal = price * quantity;
+                      int quantity = int.parse(item['quantity'] ?? '0');
+                      double price = double.parse(item['price'] ?? '0');
+                      double itemTotal = price * quantity;
 
-                  return TableRow(children: [
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(item['name'] ?? 'N/A'),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(quantity.toString()),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('${price.toStringAsFixed(2)}'),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('${itemTotal.toStringAsFixed(2)}'),
-                    ),
-                  ]);
-                })?.toList() ?? [],
+                      return TableRow(children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(item['name'] ?? 'N/A'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(quantity.toString()),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('${price.toStringAsFixed(2)}'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('${itemTotal.toStringAsFixed(2)}'),
+                        ),
+                      ]);
+                    })?.toList() ??
+                    [],
               ],
             ),
             Divider(thickness: 2),
@@ -128,13 +141,13 @@ class ViewInvoicePage extends StatelessWidget {
             Text(
               'Status: ${invoice['status'] == 'paid' ? 'Paid' : 'Unpaid'}',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: invoice['status'] == 'paid' ? Colors.green : Colors.red,
+                    color:
+                        invoice['status'] == 'paid' ? Colors.green : Colors.red,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
             ),
             SizedBox(height: 8),
-            
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,8 +158,10 @@ class ViewInvoicePage extends StatelessWidget {
                       _downloadPdf(invoice);
                     },
                     icon: Icon(Icons.download, color: Colors.white),
-                    label: Text('Download', style: TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 0, 0, 0)),
+                    label:
+                        Text('Download', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 0, 0, 0)),
                   ),
                 ),
                 SizedBox(width: 10),
@@ -172,31 +187,29 @@ class ViewInvoicePage extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // Shop Name and Address
               pw.Center(
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.center,
                   children: [
                     pw.Text(
                       invoice['shopName'] ?? 'Shop Name',
-                      style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+                      style: pw.TextStyle(
+                          fontSize: 24, fontWeight: pw.FontWeight.bold),
                     ),
                     pw.SizedBox(height: 5),
                     pw.Text(
-                      invoice['shopAddress'] ?? 'Shop Address',
+                      invoice['shopAddress'] ?? 'address',
                       style: pw.TextStyle(fontSize: 16),
                     ),
                     pw.SizedBox(height: 5),
                     pw.Text(
-                      'Mobile: ${invoice['shopMobile'] ?? 'N/A'}',
+                      'Mobile: ${invoice['mobileNo'] ?? 'N/A'}',
                       style: pw.TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
               ),
               pw.SizedBox(height: 20),
-              
-              // Date and Customer Details
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -204,8 +217,10 @@ class ViewInvoicePage extends StatelessWidget {
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text('Invoice to:', style: pw.TextStyle(fontSize: 18)),
-                      pw.Text(invoice['clientName'] ?? 'Client Name', style: pw.TextStyle(fontSize: 16)),
-                      pw.Text(invoice['email'] ?? 'Email', style: pw.TextStyle(fontSize: 16)),
+                      pw.Text(invoice['clientName'] ?? 'Client Name',
+                          style: pw.TextStyle(fontSize: 16)),
+                      pw.Text(invoice['email'] ?? 'Email',
+                          style: pw.TextStyle(fontSize: 16)),
                     ],
                   ),
                   pw.Text(
@@ -215,8 +230,6 @@ class ViewInvoicePage extends StatelessWidget {
                 ],
               ),
               pw.SizedBox(height: 20),
-
-              // Items Table
               pw.Table.fromTextArray(
                 headers: ['Item Name', 'Quantity', 'Price', 'Total'],
                 data: [
@@ -231,11 +244,11 @@ class ViewInvoicePage extends StatelessWidget {
                 ],
               ),
               pw.SizedBox(height: 20),
-              
-              // Subtotal and Thank you
               pw.Align(
                 alignment: pw.Alignment.centerRight,
-                child: pw.Text('Subtotal: ${invoice['totalAmount'] ?? '0.00'}', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                child: pw.Text('Subtotal: ${invoice['totalAmount'] ?? '0.00'}',
+                    style: pw.TextStyle(
+                        fontSize: 18, fontWeight: pw.FontWeight.bold)),
               ),
               pw.SizedBox(height: 40),
               pw.Align(

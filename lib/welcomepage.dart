@@ -26,14 +26,12 @@ class WelcomePage extends StatelessWidget {
           Text(
             'Create Invoices and Share it with your Customer Easily',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Colors.black54,
-            ),
+                  color: Colors.black54,
+                ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 20),
-          
           SizedBox(height: 20),
-          
           SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -48,7 +46,10 @@ class WelcomePage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => SignupScreen()),
                       );
                     },
-                    child: Text('Sign Up',style: TextStyle(color:Colors.white),),
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).primaryColor,
                       padding: EdgeInsets.symmetric(vertical: 15),
@@ -67,7 +68,8 @@ class WelcomePage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => LoginScreen()),
                       );
                     },
-                    child: Text('Sign In', style: TextStyle(color:Colors.black)),
+                    child:
+                        Text('Sign In', style: TextStyle(color: Colors.black)),
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: Theme.of(context).primaryColor),
                       padding: EdgeInsets.symmetric(vertical: 15),

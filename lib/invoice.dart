@@ -20,7 +20,7 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
   List<Map<String, dynamic>> items = [];
   final _itemNameController = TextEditingController();
   final _itemPriceController = TextEditingController();
-  final _itemQuantityController = TextEditingController(text: '1'); // Default quantity to 1
+  final _itemQuantityController = TextEditingController(text: '1');
   String _status = 'unpaid';
   User? user;
   String? uid;
@@ -109,129 +109,62 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('New Invoice'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
+      body: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: Form(
+            key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
+                _buildTextField(
                   controller: _clientNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Client Name',
-                    labelStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
-                  validator: (value) {
-                    if (value!.isEmpty) return 'Please enter client name';
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
-                  validator: (value) {
-                    if (value!.isEmpty) return 'Please enter email';
-                    return null;
-                  },
+                  label: 'Client Name',
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter client name' : null,
                 ),
                 SizedBox(height: 20),
-                Text(
-                  'Add Items',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+                _buildTextField(
+                  controller: _emailController,
+                  label: 'Client Email',
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter email' : null,
                 ),
-                TextFormField(
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Add Items',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(height: 20),
+                _buildTextField(
                   controller: _itemNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Item Name',
-                    labelStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+                  label: 'Item Name',
                 ),
-                TextFormField(
+                SizedBox(height: 20),
+                _buildTextField(
                   controller: _itemPriceController,
-                  decoration: InputDecoration(
-                    labelText: 'Item Price',
-                    labelStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+                  label: 'Item Price',
                   keyboardType: TextInputType.number,
                 ),
-                TextFormField(
+                SizedBox(height: 20),
+                _buildTextField(
                   controller: _itemQuantityController,
-                  decoration: InputDecoration(
-                    labelText: 'Item Quantity',
-                    labelStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+                  label: 'Item Quantity',
                   keyboardType: TextInputType.number,
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _addItem,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   child: Text(
@@ -240,53 +173,42 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                ...items.map((item) => ListTile(
-                      title: Text(item['name']!),
-                      subtitle: Text(
-                          '\u{20B9}${item['price']} x ${item['quantity']} = \u{20B9}${(double.parse(item['price']!) * int.parse(item['quantity']!)).toStringAsFixed(2)}'),
-                    )),
-                SizedBox(height: 20),
+                ...items
+                    .map((item) => ListTile(
+                          title: Text(item['name']!),
+                          subtitle: Text(
+                            '\u{20B9}${item['price']} x ${item['quantity']} = \u{20B9}${(double.parse(item['price']!) * int.parse(item['quantity']!)).toStringAsFixed(2)}',
+                          ),
+                        ))
+                    .toList(),
                 DropdownButtonFormField<String>(
                   value: _status,
-                  decoration: InputDecoration(
-                    labelText: 'Status',
-                    labelStyle: TextStyle(color: Theme.of(context).hintColor),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  items: <String>['paid', 'unpaid']
+                  decoration: _buildInputDecoration('Status'),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _status = newValue!;
+                    });
+                  },
+                  items: <String>['unpaid', 'paid']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
                     );
                   }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _status = newValue!;
-                    });
-                  },
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _submitForm,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   child: Text(
-                    'Submit Invoice',
+                    'Save Invoice',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -294,6 +216,38 @@ class _NewInvoicePageState extends State<NewInvoicePage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    String? Function(String?)? validator,
+    TextInputType? keyboardType,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: _buildInputDecoration(label),
+      validator: validator,
+      keyboardType: keyboardType,
+    );
+  }
+
+  InputDecoration _buildInputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(color: const Color.fromARGB(255, 66, 66, 66)),
+      filled: true,
+      fillColor: Colors.grey[200],
+      contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: const Color.fromARGB(255, 113, 113, 113)),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.blueAccent),
+        borderRadius: BorderRadius.circular(12),
       ),
     );
   }

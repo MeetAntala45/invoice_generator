@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text(
                   'Login to your account',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
@@ -66,16 +66,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     filled: true,
                     fillColor: Theme.of(context).cardColor,
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).hintColor),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium?.color),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
@@ -92,16 +95,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     filled: true,
                     fillColor: Theme.of(context).cardColor,
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).hintColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).hintColor),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   obscureText: true,
-                  style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium?.color),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
@@ -110,7 +116,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 SizedBox(height: 10),
-                
                 SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: _login,
@@ -123,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: Text(
                     'Login',
-                    style: TextStyle(fontSize: 18,color:Colors.white),
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
                 SizedBox(height: 20),

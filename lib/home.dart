@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> recentTransactions = [];
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String shopName = '';
+  String shopName = ''; 
 
   @override
   void initState() {
@@ -47,8 +47,10 @@ class _HomePageState extends State<HomePage> {
       try {
         QuerySnapshot snapshot = await _firestore
             .collection('invoices')
-            .where('shopkeeperId', isEqualTo: uid) // Fetch invoices for the logged-in user
-            .orderBy('invoiceData.date', descending: true) // Order by date, most recent first
+            .where('shopkeeperId',
+                isEqualTo: uid)
+            .orderBy('invoiceData.date',
+                descending: true)
             .get();
 
         setState(() {
@@ -59,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               'email': data['invoiceData']['email'],
               'items': data['invoiceData']['items'],
               'status': data['invoiceData']['status'],
-              'date': data['invoiceData']['date'], // ISO date string
+              'date': data['invoiceData']['date'],
               'totalAmount': data['invoiceData']['totalAmount'],
               'shopName': data['invoiceData']['shopName'],
             };
@@ -119,8 +121,8 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.person),
               title: Text('Profile'),
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => ProfilePage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()));
               },
             ),
             ListTile(
@@ -133,7 +135,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('Logout'),
               onTap: () {
                 _auth.signOut();
-                Navigator.of(context).pop(); // Close the drawer
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -155,7 +157,8 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NewInvoicePage(onSubmit: _addInvoice),
+                      builder: (context) =>
+                          NewInvoicePage(onSubmit: _addInvoice),
                     ),
                   );
                 },
@@ -171,7 +174,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Text('New Invoice', style: Theme.of(context).textTheme.bodyMedium),
+                    Text('New Invoice',
+                        style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
               ),
@@ -229,7 +233,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(invoice['date']))}', // Format the date
+              'Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(invoice['date']))}',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: Color.fromARGB(255, 0, 0, 0),
                   ),
